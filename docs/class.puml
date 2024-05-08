@@ -1,0 +1,88 @@
+@startuml warranty_manager
+' class testclass{
+    '     -private_string: str
+    '     +public_string: str
+    '     -private_method()
+    '     +public_method()
+    '
+'}
+' extension: <|--
+' composition *--
+' aggregation o--
+
+enum CertificateTypeEnum{
+    RECEIPT
+    CONTAINER
+    OTHER
+}
+
+enum WarrantyTypeEnum{
+    UNLIMIT
+    LIMITED
+}
+
+entity Certificate{
+    +string location
+    +CertificateTypeEnum certify_Type
+}
+
+entity Warranty{
+    +int id
+    +string name
+    +float start_date
+    +WarrantyTypeEnum warrant_type
+    +Certificate certificate
+}
+
+class Accountant{
+    #vault Dict[warranty_id, warranty]
+    +get_warranty(due_date) -> list[Warranty]
+    +get_warranty(label) -> list[Warranty]
+    +store_warranty() -> None
+}
+
+class Counter{
+    -get_time() -> float
+    +unix2day() -> int
+    +is_due() -> bool
+}
+
+class Maintainer{
+    -Timer timer
+    -Accountant accountant
+    -accountant.valut vault
+    +_list_warranties() -> List[Warranty]
+    +_log_new_warranties() -> None
+    +_delete_warranties() -> None
+    +_check_notification() -> List[Notification]
+}
+
+struct Notification{
+
+}
+
+class Service{
+    +list_warranties() -> List[Warranty]
+    +get_warranties() -> Warranty
+    +log_new_warranties() -> None
+    +update_warranties() -> None
+    +delete_warranties() -> None
+    +check_notification() -> List[Notification]
+}
+
+Service --> Notification
+
+Certificate --> CertificateTypeEnum
+Warranty  --> WarrantyTypeEnum
+Warranty --> Certificate
+Maintainer --> Warranty
+
+Service *-- Maintainer
+Maintainer *-- Accountant
+Maintainer o-- Counter
+
+' 1 day =86400 seconds
+
+
+'layout
+@enduml
